@@ -51,8 +51,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     public static RobotContainer robotContainer;
-    // private boolean wasAuto = false;
-
+    
     public Robot() {
         // Set up data receivers & replay source
         switch (RobotContainer.currentMode) {
@@ -133,17 +132,6 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically when disabled. */
     @Override
     public void disabledPeriodic() {
-        // try {
-        //     autonomousCommand = robotContainer.getAutonomousCommand();
-        //     List<PathPlannerPath> auto = PathPlannerAuto.getPathGroupFromAutoFile(autonomousCommand.getName());
-        //     if (!wasAuto){
-        //         Drive.getInstance().setPose(auto.get(0).getStartingDifferentialPose().rotateAround(auto.get(0).getStartingDifferentialPose().getTranslation(), new Rotation2d(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Math.PI : 0)));
-        //     }
-        //     for (int i = 0; i < auto.size(); i++) {
-        //         Drive.getInstance().field.getObject("Path " + i).setPoses(auto.get(i).getPathPoses());
-        //     }
-        // } catch (Exception e) {
-        // }
     }
 
     @Override
@@ -162,15 +150,7 @@ public class Robot extends LoggedRobot {
         // Vision.getInstance().setIMUMode(4);
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
-            // List<PathPlannerPath> auto;
-            // try {
-            //     auto = PathPlannerAuto.getPathGroupFromAutoFile(autonomousCommand.getName());
-            //     if (wasAuto){
-            //         Drive.getInstance().setPose(auto.get(0).getStartingDifferentialPose().rotateAround(auto.get(0).getStartingDifferentialPose().getTranslation(), new Rotation2d(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Math.PI : 0)));
-            //     }
-                CommandScheduler.getInstance().schedule(autonomousCommand);
-            // } catch (Exception e) {
-            // }
+            CommandScheduler.getInstance().schedule(autonomousCommand);
         }
         NetworkCommunicator.getInstance().setIsAuto(true);
     }
@@ -178,16 +158,12 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        // PathPlannerLogging.setLogActivePathCallback((List<Pose2d> activePath) -> {
-        // Drive.getInstance().field.getObject("Active Path").setPoses(activePath);
-        // });
     }
 
     @Override
     public void autonomousExit() {
         NetworkCommunicator.getInstance().setIsAuto(false);
         Vision.getInstance().recordMatch(true);
-        // wasAuto = true;
     }
 
     /** This function is called once when teleop is enabled. */
@@ -205,8 +181,6 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-
-        RobotContainer.shooterCommand.reset();
     }
 
     /** This function is called periodically during operator control. */
@@ -255,7 +229,6 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
-        robotContainer.drive.runCharacterization(2);
     }
 
     @Override

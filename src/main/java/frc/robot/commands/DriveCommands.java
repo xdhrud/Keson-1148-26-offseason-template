@@ -27,8 +27,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.drive.DriveConstants.FieldConstants;
-import frc.robot.subsystems.shooter.ShooterConstants;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -85,26 +83,8 @@ public class DriveCommands {
             BooleanSupplier autoDrive) {
 
         DoubleSupplier rotateToHub = () -> {
-            Pose2d pos = Drive.getInstance().getPose().exp(Drive.getInstance().getChassisSpeeds().toTwist2d(ShooterConstants.sotmPhaseShiftTimeSeconds));
-            Pose2d hubPos = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-                    ? FieldConstants.RED_HUB_POS
-                    : FieldConstants.BLUE_HUB_POS;
-            double d = pos.getTranslation().getDistance(hubPos.getTranslation());
-            double t = 0;
-            Pose2d newPos;
-
-            // Optimize until close enough
-            do {
-                t = ShooterConstants.timeOfFlightMap.get(d);
-    
-                ChassisSpeeds speeds = Drive.getInstance().getChassisSpeeds();
-                newPos = pos.plus(new Transform2d(speeds.vxMetersPerSecond * t, speeds.vyMetersPerSecond * t, new Rotation2d(speeds.omegaRadiansPerSecond * t)));
-                d = newPos.getTranslation().getDistance(hubPos.getTranslation());
-            } while (Math.abs(t - ShooterConstants.timeOfFlightMap.get(d)) > ShooterConstants.sotmOptimizationTimeThresholdSeconds);
-
-            Translation2d hub = hubPos.getTranslation();
-            Translation2d robotToHub = hub.minus(newPos.getTranslation());
-            return robotToHub.getAngle().getRadians() + Math.PI;
+            // TODO: Add autorotating
+            return 0.0;
         };
 
         return Commands.run(() -> {

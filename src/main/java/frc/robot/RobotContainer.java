@@ -13,55 +13,34 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.drive.DriveConstants.FieldConstants;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.drive.ModuleIOTalonFXReal;
 import frc.robot.subsystems.drive.ModuleIOTalonFXSim;
-import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.wrist.IntakeWrist;
-import frc.robot.subsystems.wrist.WristConstants;
-import frc.robot.util.OrchestraUtils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -97,15 +76,9 @@ public class RobotContainer {
 
     // Subsystems
     public final Drive drive;
-    public final Funnel funnel;
-    public final Intake intake;
-    public final Shooter shooter;
-    public final Hood hood;
-    public final IntakeWrist intakeWrist;
     public final Vision vision;
 
     // Commands
-    public static ShooterCommand shooterCommand;
 
     // Controllers
     public final CommandXboxController operator = new CommandXboxController(1);
@@ -113,7 +86,6 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
-    private final LoggedDashboardChooser<Command> songChooser;
 
     public static SwerveDriveSimulation driveSimulation = null;
 
@@ -134,11 +106,6 @@ public class RobotContainer {
                         pose -> {
                         },
                         vision);
-                funnel = Funnel.getInstance();
-                intake = Intake.getInstance();
-                shooter = Shooter.getInstance();
-                hood = Hood.getInstance();
-                intakeWrist = IntakeWrist.getInstance();
                 break;
 
             case SIM:
@@ -155,11 +122,6 @@ public class RobotContainer {
                         new ModuleIOTalonFXSim(DriveConstants.BackRight, driveSimulation.getModules()[3]),
                         driveSimulation::setSimulationWorldPose,
                         vision);
-                funnel = Funnel.getInstance();
-                intake = Intake.getInstance();
-                shooter = Shooter.getInstance();
-                hood = Hood.getInstance();
-                intakeWrist = IntakeWrist.getInstance();
                 break;
 
             default:
@@ -179,72 +141,17 @@ public class RobotContainer {
                         pose -> {
                         },
                         vision);
-                funnel = Funnel.getInstance();
-                intake = Intake.getInstance();
-                shooter = Shooter.getInstance();
-                hood = Hood.getInstance();
-                intakeWrist = IntakeWrist.getInstance();
                 break;
         }
 
         // Set up named commands for pathplanner
         NamedCommands.registerCommand("ShootNear", Commands.runOnce(() -> {
-            shooterCommand.shootNear();
-            shooterCommand.stopFunnel();
-        }).andThen(Commands.waitUntil(() -> shooterCommand.isReady())).andThen(Commands.runOnce(() -> {
-            shooterCommand.runFunnel();
-        })));
-        NamedCommands.registerCommand("ShootMiddle", Commands.runOnce(() -> {
-            shooterCommand.shootMiddle();
-            shooterCommand.stopFunnel();
-        }).andThen(Commands.waitUntil(() -> shooterCommand.isReady())).andThen(Commands.runOnce(() -> {
-            shooterCommand.runFunnel();
-        })));
-        NamedCommands.registerCommand("ShootTrench", Commands.runOnce(() -> {
-            shooterCommand.shootTrench();
-            shooterCommand.stopFunnel();
-        }).andThen(Commands.waitUntil(() -> shooterCommand.isReady())).andThen(Commands.runOnce(() -> {
-            shooterCommand.runFunnel();
-        })));
-        NamedCommands.registerCommand("StopShoot", Commands.runOnce(() -> {
-            shooterCommand.reset();
+            // TODO: Add code here
         }));
-        NamedCommands.registerCommand("DeployIntake", Commands.runOnce(() -> {
-            intakeWrist.goToPosition(WristConstants.deployedPositionRotations);
-            intake.runVoltage(IntakeConstants.fastIntakeVoltage);
-        }, intakeWrist, intake));
-        NamedCommands.registerCommand("LiftIntake", Commands.runOnce(() -> {
-            intakeWrist.goToPosition(WristConstants.stowedPositionRotations);
-            intake.runVoltage(IntakeConstants.slowIntakeVoltage);
-        }, intakeWrist, intake));
+        // TODO: Add other named commands
         NamedCommands.registerCommand("Stop", Commands.runOnce(() -> {
             drive.stop();
         }, drive));
-        NamedCommands.registerCommand("AutoRotate", Commands.run(() -> {
-            DoubleSupplier rotateToHub = () -> {
-                Pose2d pos = Drive.getInstance().getPose().exp(Drive.getInstance().getChassisSpeeds().toTwist2d(ShooterConstants.sotmPhaseShiftTimeSeconds));
-                Pose2d hubPos = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-                        ? FieldConstants.RED_HUB_POS
-                        : FieldConstants.BLUE_HUB_POS;
-                double d = pos.getTranslation().getDistance(hubPos.getTranslation());
-                double t = 0;
-                Pose2d newPos;
-
-                // Optimize until close enough
-                do {
-                    t = ShooterConstants.timeOfFlightMap.get(d);
-        
-                    ChassisSpeeds speeds = Drive.getInstance().getChassisSpeeds();
-                    newPos = pos.plus(new Transform2d(speeds.vxMetersPerSecond * t, speeds.vyMetersPerSecond * t, new Rotation2d(speeds.omegaRadiansPerSecond * t)));
-                    d = newPos.getTranslation().getDistance(hubPos.getTranslation());
-                } while (Math.abs(t - ShooterConstants.timeOfFlightMap.get(d)) > ShooterConstants.sotmOptimizationTimeThresholdSeconds);
-
-                Translation2d hub = hubPos.getTranslation();
-                Translation2d robotToHub = hub.minus(newPos.getTranslation());
-                return robotToHub.getAngle().getRadians() + Math.PI;
-            };
-            Drive.getInstance().autoRotate(new ChassisSpeeds(), new Rotation2d(rotateToHub.getAsDouble()));
-        }));
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -263,14 +170,6 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysID (Dynamic Reverse)",
                 drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-        songChooser = new LoggedDashboardChooser<>("Orchestra Song Chooser");
-        for (int song = 0; song < OrchestraUtils.allSongs.length; song++) {
-            final int song1 = song;
-            songChooser.addOption(OrchestraUtils.allSongs[song], Commands.runOnce(() -> {
-                OrchestraUtils.songSelected = song1;
-                SmartDashboard.putString("DB/String 1", "Selected: " + OrchestraUtils.allSongs[song1]);
-            }));
-        }
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -289,13 +188,8 @@ public class RobotContainer {
                 DriveCommands.bigDrive(drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(),
                         () -> -(driver.getRightX() < 0 ? -(Math.pow(Math.abs(driver.getRightX()), 1.5))
                                 : Math.pow(driver.getRightX(), 1.5)),
-                        () -> shooterCommand.isAutoRotating()));
-
-        shooterCommand = new ShooterCommand();
-        shooter.setDefaultCommand(shooterCommand);
-
-        // Configure orchestra
-        // configureOrchestra();
+        // TODO: Add autorotating boolean
+                        () -> false));
 
         // Assign controls in ControlMap
         ControlMap.getInstance().configurePreset1(operator, driver);
@@ -327,21 +221,5 @@ public class RobotContainer {
                 driveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel",
                 SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
-    }
-
-    public void configureOrchestra() {
-        // ORCHESTRA STUFF
-        int driveMotorIds[] = {};
-        int rioMotorIds[] = { 18, 19 };
-        for (int id : driveMotorIds) {
-            OrchestraUtils.orchestra.addInstrument(new TalonFX(id, new CANBus("subsystems")));
-        }
-        for (int id : rioMotorIds) {
-            OrchestraUtils.orchestra
-                    .addInstrument(new TalonFX(id, new CANBus(DriveConstants.DrivetrainConstants.CANBusName)));
-        }
-        SmartDashboard.putString("DB/String 0", "Playing: ");
-        SmartDashboard.putString("DB/String 1", "Selected: " + OrchestraUtils.allSongs[0]);
-        OrchestraUtils.orchestra.loadMusic("music/" + OrchestraUtils.allSongs[0]);
     }
 }
