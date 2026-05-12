@@ -1,0 +1,277 @@
+// Copyright 2021-2025 FRC 6328
+// http://github.com/Mechanical-Advantage
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
+package frc.robot;
+
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.subsystems.drive.NetworkCommunicator;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.util.Elastic;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
+ * project.
+ */
+public class Robot extends LoggedRobot {
+    private Command autonomousCommand;
+    public static RobotContainer robotContainer;
+    // private boolean wasAuto = false;
+
+    public Robot() {
+        // Set up data receivers & replay source
+        switch (RobotContainer.currentMode) {
+            case REAL:
+                // Running on a real robot, log to a USB stick ("/U/logs")
+                Logger.addDataReceiver(new WPILOGWriter("/U/logs")); // home/lvuser/logs
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case SIM:
+                // Running a physics simulator, log to NT
+                Logger.addDataReceiver(new NT4Publisher());
+                setSimulatedField();
+                break;
+
+            case REPLAY:
+                // Replaying a log, set up replay source
+                setUseTiming(false); // Run as fast as possible
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // home/lvuser/logs
+                break;
+        }
+
+        // Start AdvantageKit logger
+        Logger.start();
+
+        // Check for valid swerve config
+        var modules = new SwerveModuleConstants[] { DriveConstants.FrontLeft, DriveConstants.FrontRight,
+                DriveConstants.BackLeft, DriveConstants.BackRight };
+        for (var constants : modules) {
+            if (constants.DriveMotorType != DriveMotorArrangement.TalonFX_Integrated
+                    || constants.SteerMotorType != SteerMotorArrangement.TalonFX_Integrated) {
+                throw new RuntimeException(
+                        "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
+            }
+        }
+
+        // Instantiate our RobotContainer. This will perform all our button bindings,
+        // and put our autonomous chooser on the dashboard.
+        robotContainer = new RobotContainer();
+    }
+
+    @Override
+    public void robotInit() {
+        Elastic.selectTab("Autonomous");
+        NetworkCommunicator.getInstance().setIsAuto(true);
+
+        if (RobotContainer.currentMode == RobotContainer.Mode.SIM) {
+            robotContainer.resetSimulationField();
+        }
+    }
+
+    /** This function is called periodically during all modes. */
+    @Override
+    public void robotPeriodic() {
+        // Switch thread to high priority to improve loop timing
+        Threads.setCurrentThreadPriority(true, 99);
+
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled commands, running already-scheduled commands, removing
+        // finished or interrupted commands, and running subsystem periodic() methods.
+        // This must be called from the robot's periodic block in order for anything in
+        // the Command-based framework to work.
+        CommandScheduler.getInstance().run();
+
+        // Return to normal thread priority
+        Threads.setCurrentThreadPriority(false, 10);
+    }
+
+    /** This function is called once when the robot is disabled. */
+    @Override
+    public void disabledInit() {
+        Vision.getInstance().setIMUMode(1);
+        Drive.getInstance().setVisionActive(false);
+    }
+
+    /** This function is called periodically when disabled. */
+    @Override
+    public void disabledPeriodic() {
+        // try {
+        //     autonomousCommand = robotContainer.getAutonomousCommand();
+        //     List<PathPlannerPath> auto = PathPlannerAuto.getPathGroupFromAutoFile(autonomousCommand.getName());
+        //     if (!wasAuto){
+        //         Drive.getInstance().setPose(auto.get(0).getStartingDifferentialPose().rotateAround(auto.get(0).getStartingDifferentialPose().getTranslation(), new Rotation2d(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Math.PI : 0)));
+        //     }
+        //     for (int i = 0; i < auto.size(); i++) {
+        //         Drive.getInstance().field.getObject("Path " + i).setPoses(auto.get(i).getPathPoses());
+        //     }
+        // } catch (Exception e) {
+        // }
+    }
+
+    @Override
+    public void disabledExit() {
+    }
+
+    /**
+     * This autonomous runs the autonomous command selected by your
+     * {@link RobotContainer} class.
+     */
+    @Override
+    public void autonomousInit() {
+        Elastic.selectTab("Autonomous");
+        Drive.getInstance().setVisionActive(true);
+        autonomousCommand = robotContainer.getAutonomousCommand();
+        // Vision.getInstance().setIMUMode(4);
+        // schedule the autonomous command (example)
+        if (autonomousCommand != null) {
+            // List<PathPlannerPath> auto;
+            // try {
+            //     auto = PathPlannerAuto.getPathGroupFromAutoFile(autonomousCommand.getName());
+            //     if (wasAuto){
+            //         Drive.getInstance().setPose(auto.get(0).getStartingDifferentialPose().rotateAround(auto.get(0).getStartingDifferentialPose().getTranslation(), new Rotation2d(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Math.PI : 0)));
+            //     }
+                CommandScheduler.getInstance().schedule(autonomousCommand);
+            // } catch (Exception e) {
+            // }
+        }
+        NetworkCommunicator.getInstance().setIsAuto(true);
+    }
+
+    /** This function is called periodically during autonomous. */
+    @Override
+    public void autonomousPeriodic() {
+        // PathPlannerLogging.setLogActivePathCallback((List<Pose2d> activePath) -> {
+        // Drive.getInstance().field.getObject("Active Path").setPoses(activePath);
+        // });
+    }
+
+    @Override
+    public void autonomousExit() {
+        NetworkCommunicator.getInstance().setIsAuto(false);
+        Vision.getInstance().recordMatch(true);
+        // wasAuto = true;
+    }
+
+    /** This function is called once when teleop is enabled. */
+    @Override
+    public void teleopInit() {
+        Elastic.selectTab("Teleop");
+        Drive.getInstance().setVisionActive(true);
+        // Vision.getInstance().setIMUMode(4);
+        NetworkCommunicator.getInstance().setIsAuto(false);
+
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
+
+        RobotContainer.shooterCommand.reset();
+    }
+
+    /** This function is called periodically during operator control. */
+    @Override
+    public void teleopPeriodic() {
+        double matchTime = DriverStation.getMatchTime();
+        double shiftTime = matchTime;
+        String shift = "";
+        if (matchTime >= 130) {
+            shiftTime -= 130;
+            shift = "Transition";
+        } else if (matchTime >= 105) {
+            shiftTime -= 105;
+            shift = "Shift 1";
+        } else if (matchTime >= 80) {
+            shiftTime -= 80;
+            shift = "Shift 2";
+        } else if (matchTime >= 55) {
+            shiftTime -= 55;
+            shift = "Shift 3";
+        } else if (matchTime >= 30) {
+            shiftTime -= 30;
+            shift = "Shift 4";
+        } else if (matchTime >= 0) {
+            shift = "Endgame";
+        }
+
+        SmartDashboard.putNumber("ShiftTime", shiftTime);
+        SmartDashboard.putString("Shift", shift);
+    }
+
+    @Override
+    public void teleopExit() {
+        Vision.getInstance().recordMatch(false);
+    }
+
+    /** This function is called once when test mode is enabled. */
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+        NetworkCommunicator.getInstance().setIsAuto(false);
+
+    }
+
+    /** This function is called periodically during test mode. */
+    @Override
+    public void testPeriodic() {
+        robotContainer.drive.runCharacterization(2);
+    }
+
+    @Override
+    public void simulationInit() {
+    }
+
+    /** This function is called periodically whilst in simulation. */
+    @Override
+    public void simulationPeriodic() {
+        robotContainer.updateSimulation();
+    }
+
+    public void setSimulatedField() {
+        SimulatedArena.overrideInstance(new Arena2026Rebuilt());
+        SimulatedArena.getInstance(); // Required to initialize MapleSim
+
+        SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3, 3)));
+    }
+}

@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.054951197870452,
+        "y": 1.2785891748003542
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0227595385980477,
+        "y": 0.4898935226264417
+      },
+      "isLocked": false,
+      "linkedName": "Right Trench Shoot"
+    },
+    {
+      "anchor": {
+        "x": 4.495527950310559,
+        "y": 0.5462289263531488
+      },
+      "prevControl": {
+        "x": 3.601485601667782,
+        "y": 0.5784466686465813
+      },
+      "nextControl": {
+        "x": 5.388846495119788,
+        "y": 0.5140372670807449
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.225829636202307,
+        "y": 1.9868056787932562
+      },
+      "prevControl": {
+        "x": 6.4431233362910385,
+        "y": 0.3289352262644183
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Center Right Close"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 178.65707703004912
+    },
+    {
+      "waypointRelativePos": 1.35,
+      "rotationDegrees": -177.3131656240481
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeDeploy",
+      "waypointRelativePos": 1.45,
+      "endWaypointRelativePos": 0.8633633633633646,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.885,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 535.716,
+    "maxAngularAcceleration": 450.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -122.7995312726192
+  },
+  "useDefaultConstraints": true
+}

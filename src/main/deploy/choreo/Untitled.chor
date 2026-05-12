@@ -1,0 +1,127 @@
+{
+ "name":"Untitled",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{},
+  "poses":{
+   "R":{
+    "x":{
+     "exp":"Right Center Intake.x",
+     "val":7.796813011169434
+    },
+    "y":{
+     "exp":"Right Center Intake.y",
+     "val":3.5949831008911133
+    },
+    "heading":{
+     "exp":"Right Center Intake.heading",
+     "val":1.584486073909938
+    }
+   },
+   "Right Center Intake":{
+    "x":{
+     "exp":"7.796813011169434 m",
+     "val":7.796813011169434
+    },
+    "y":{
+     "exp":"3.5949831008911133 m",
+     "val":3.5949831008911133
+    },
+    "heading":{
+     "exp":"1.584486073909938 rad",
+     "val":1.584486073909938
+    }
+   },
+   "Right Middle Shoot":{
+    "x":{
+     "exp":"2.7666125297546387 m",
+     "val":2.7666125297546387
+    },
+    "y":{
+     "exp":"1.6817394495010376 m",
+     "val":1.6817394495010376
+    },
+    "heading":{
+     "exp":"-2.1353653111637403 rad",
+     "val":-2.1353653111637403
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"10.875 in",
+    "val":0.276225
+   },
+   "y":{
+    "exp":"10.875 in",
+    "val":0.276225
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-10.875 in",
+    "val":-0.276225
+   },
+   "y":{
+    "exp":"10.875 in",
+    "val":0.276225
+   }
+  },
+  "mass":{
+   "exp":"137.133 lb",
+   "val":62.202482475210005
+  },
+  "inertia":{
+   "exp":"28310.843 in ^ 2 lb",
+   "val":8.284875283808493
+  },
+  "gearing":{
+   "exp":"7.03",
+   "val":7.03
+  },
+  "radius":{
+   "exp":"1.9627548450853765 in",
+   "val":0.04985397306516856
+  },
+  "vmax":{
+   "exp":"5300 rpm",
+   "val":555.0147021341968
+  },
+  "tmax":{
+   "exp":"1.18 N * m",
+   "val":1.18
+  },
+  "cof":{
+   "exp":"1.2",
+   "val":1.2
+  },
+  "bumper":{
+   "front":{
+    "exp":"16.875 in",
+    "val":0.428625
+   },
+   "side":{
+    "exp":"16.9375 in",
+    "val":0.4302125
+   },
+   "back":{
+    "exp":"16.875 in",
+    "val":0.428625
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":null,
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}

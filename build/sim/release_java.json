@@ -1,0 +1,21 @@
+[
+  {
+    "type": "java",
+    "name": "jar (in project 1148-26B)",
+    "extensions": [
+      {
+        "name": "Sim GUI",
+        "libName": "/Users/maxwaldman/Documents/GitHub/1148-26B/build/jni/release/libhalsim_gui.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Use Real DriverStation",
+        "libName": "/Users/maxwaldman/Documents/GitHub/1148-26B/build/jni/release/libhalsim_ds_socket.dylib",
+        "defaultEnabled": false
+      }
+    ],
+    "environment": {},
+    "libraryDir": "/Users/maxwaldman/Documents/GitHub/1148-26B/build/jni/release",
+    "mainClassName": "frc.robot.Main"
+  }
+]

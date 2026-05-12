@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.819316770186335,
+        "y": 3.5078615794143744
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.068802129547471,
+        "y": 0.7474267968056778
+      },
+      "isLocked": false,
+      "linkedName": "Center Post-Intake Right"
+    },
+    {
+      "anchor": {
+        "x": 5.260079858030168,
+        "y": 0.538181011535048
+      },
+      "prevControl": {
+        "x": 6.724800354924579,
+        "y": 0.5623247559893514
+      },
+      "nextControl": {
+        "x": 3.8966718279750783,
+        "y": 0.5157072527978767
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.054951197870452,
+        "y": 1.2785891748003542
+      },
+      "prevControl": {
+        "x": 3.312484472049689,
+        "y": 0.6106122448979578
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Trench Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.6,
+      "rotationDegrees": -13.369150952513616
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeLift",
+      "waypointRelativePos": 0.2,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.885,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 535.716,
+    "maxAngularAcceleration": 450.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -122.7995312726192
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
