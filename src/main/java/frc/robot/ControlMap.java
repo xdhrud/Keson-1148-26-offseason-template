@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer.Mode;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.ButtonProcessor;
 
 public class ControlMap {
     private static ControlMap instance;
@@ -21,6 +22,17 @@ public class ControlMap {
     }
 
     private ControlMap() {
+    }
+
+    private ButtonProcessor intakeButtonProcessor = new ButtonProcessor();
+    private ButtonProcessor reverseButtonProcessor = new ButtonProcessor();
+
+    public boolean intakeJustPressed() {
+        return intakeButtonProcessor.justPressed();
+    }
+
+    public boolean reverseButtonHeld() {
+        return reverseButtonProcessor.isHolding();
     }
 
     public void configurePreset1(CommandXboxController operator, CommandPS5Controller driver) {
@@ -37,6 +49,13 @@ public class ControlMap {
                         DriverStation.getAlliance().get() == Alliance.Blue ? new Rotation2d()
                                 : new Rotation2d(Math.PI))),
                 Drive.getInstance()).ignoringDisable(true));
+
+        // Intake toggle L2
+        intakeButtonProcessor.checkDebounce(driver.L2().getAsBoolean());
+
+        // -------- OPERATOR CONTROLS ---------
+
+        reverseButtonProcessor.checkHold(operator.leftBumper().getAsBoolean());
 
         // TODO: Add controls here
     }
