@@ -1,10 +1,10 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake.roller;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface IntakeIO {
+public interface RollerIO {
     @AutoLog
-    public static class IntakeIOInputs {
+    public static class RollerIOInputs {
         public boolean intakeMotorMasterConnected = false;
         public boolean intakeMotorFollowerConnected = false;
         public double intakeVelocityRPS = 0.0;
@@ -14,7 +14,7 @@ public interface IntakeIO {
         public double intakeTempC = 0.0;
     }
 
-    public default void updateInputs(IntakeIOInputs inputs) {
+    public default void updateInputs(RollerIOInputs inputs) {
     }
 
     public default void runVoltage(double volts) {

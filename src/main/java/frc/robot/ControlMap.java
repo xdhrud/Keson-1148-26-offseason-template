@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer.Mode;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants.IntakeState;
+import frc.robot.subsystems.intake.roller.Intake;
+import frc.robot.subsystems.intake.roller.RollerConstants.IntakeState;
 
 public class ControlMap {
     private static ControlMap instance;
@@ -49,7 +49,10 @@ public class ControlMap {
 
         // -------- OPERATOR CONTROLS ---------
 
-        operator.leftBumper().onTrue(Intake.getInstance().setState(IntakeState.REVERSE)).onFalse(Intake.getInstance().setState(IntakeState.FAST));
+        operator.leftBumper().onTrue(Intake.getInstance().setState(IntakeState.REVERSE))
+                .onFalse(Intake.getInstance().setState(IntakeState.FAST)
+        );
+        
 
         // TODO: Add controls here
     }

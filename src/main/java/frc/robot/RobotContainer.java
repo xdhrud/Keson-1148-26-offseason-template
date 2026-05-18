@@ -40,7 +40,7 @@ import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.drive.ModuleIOTalonFXReal;
 import frc.robot.subsystems.drive.ModuleIOTalonFXSim;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.roller.Intake;
 import frc.robot.subsystems.vision.Vision;
 
 /**

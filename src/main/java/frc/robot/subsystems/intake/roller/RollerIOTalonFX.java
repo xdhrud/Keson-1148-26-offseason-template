@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake.roller;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Celsius;
@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
-public class IntakeIOTalonFX implements IntakeIO {
+public class RollerIOTalonFX implements RollerIO {
     // Motors and intake controllers
     private final TalonFX intakeMotorMaster;
     private final TalonFX intakeMotorFollower;
@@ -37,19 +37,19 @@ public class IntakeIOTalonFX implements IntakeIO {
     public final Debouncer motorMasterConnectedDebouncer = new Debouncer(0.5);
     public final Debouncer motorFollowerConnectedDebouncer = new Debouncer(0.5);
 
-    public IntakeIOTalonFX() {
-        intakeMotorMaster = new TalonFX(IntakeConstants.motorMasterID, new CANBus("subsystems"));
-        intakeMotorFollower = new TalonFX(IntakeConstants.motorFollowerID, new CANBus("subsystems"));
+    public RollerIOTalonFX() {
+        intakeMotorMaster = new TalonFX(RollerConstants.motorMasterID, new CANBus("subsystems"));
+        intakeMotorFollower = new TalonFX(RollerConstants.motorFollowerID, new CANBus("subsystems"));
         intakeMasterController = new VoltageOut(0.0).withEnableFOC(true);
         intakeFollowerController = new Follower(intakeMotorMaster.getDeviceID(),
-                IntakeConstants.motorFollowerAligned);
+                RollerConstants.motorFollowerAligned);
 
         intakeConfig = new TalonFXConfiguration();
 
-        intakeConfig.MotorOutput.Inverted = IntakeConstants.motorMasterInverted;
+        intakeConfig.MotorOutput.Inverted = RollerConstants.motorMasterInverted;
         intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        intakeConfig.CurrentLimits.StatorCurrentLimit = IntakeConstants.statorLimit;
+        intakeConfig.CurrentLimits.StatorCurrentLimit = RollerConstants.statorLimit;
         intakeConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         // intakeConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.supplyLimit;
         // intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
