@@ -6,6 +6,13 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.util.Units;
 
 public class IntakeConstants {
+    public static enum IntakeState {
+        OFF,
+        FAST,
+        SLOW,
+        REVERSE
+    }
+
     // Motor constants
     public static final int motorMasterID = 20;
     public static final int motorFollowerID = 21;

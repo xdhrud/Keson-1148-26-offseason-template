@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer.Mode;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.util.ButtonProcessor;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants.IntakeState;
 
 public class ControlMap {
     private static ControlMap instance;
@@ -22,17 +23,6 @@ public class ControlMap {
     }
 
     private ControlMap() {
-    }
-
-    private ButtonProcessor intakeButtonProcessor = new ButtonProcessor();
-    private ButtonProcessor reverseButtonProcessor = new ButtonProcessor();
-
-    public boolean intakeJustPressed() {
-        return intakeButtonProcessor.justPressed();
-    }
-
-    public boolean reverseButtonHeld() {
-        return reverseButtonProcessor.isHolding();
     }
 
     public void configurePreset1(CommandXboxController operator, CommandPS5Controller driver) {
@@ -51,11 +41,15 @@ public class ControlMap {
                 Drive.getInstance()).ignoringDisable(true));
 
         // Intake toggle L2
-        intakeButtonProcessor.checkDebounce(driver.L2().getAsBoolean());
+        driver.L2().onTrue(Commands.either(
+                Intake.getInstance().setState(IntakeState.SLOW),
+                Intake.getInstance().setState(IntakeState.FAST),
+                () -> Intake.getInstance().getState() == IntakeState.FAST
+        ));
 
         // -------- OPERATOR CONTROLS ---------
 
-        reverseButtonProcessor.checkHold(operator.leftBumper().getAsBoolean());
+        operator.leftBumper().onTrue(Intake.getInstance().setState(IntakeState.REVERSE)).onFalse(Intake.getInstance().setState(IntakeState.FAST));
 
         // TODO: Add controls here
     }
