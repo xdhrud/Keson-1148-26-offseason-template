@@ -40,7 +40,8 @@ import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.drive.ModuleIOTalonFXReal;
 import frc.robot.subsystems.drive.ModuleIOTalonFXSim;
-import frc.robot.subsystems.intake.roller.Intake;
+import frc.robot.subsystems.intake.roller.Roller;
+import frc.robot.subsystems.intake.wrist.IntakeWrist;
 import frc.robot.subsystems.vision.Vision;
 
 /**
@@ -78,7 +79,8 @@ public class RobotContainer {
     // Subsystems
     public final Drive drive;
     public final Vision vision;
-    public final Intake intake;
+    public final Roller roller;
+    public final IntakeWrist intakeWrist;
 
     // Commands
 
@@ -108,7 +110,8 @@ public class RobotContainer {
                         pose -> {
                         },
                         vision);
-                intake = Intake.getInstance();
+                roller = Roller.getInstance();
+                intakeWrist = IntakeWrist.getInstance();
                 break;
 
             case SIM:
@@ -125,7 +128,8 @@ public class RobotContainer {
                         new ModuleIOTalonFXSim(DriveConstants.BackRight, driveSimulation.getModules()[3]),
                         driveSimulation::setSimulationWorldPose,
                         vision);
-                intake = Intake.getInstance();
+                roller = Roller.getInstance();
+                intakeWrist = IntakeWrist.getInstance();
                 break;
 
             default:
@@ -145,7 +149,8 @@ public class RobotContainer {
                         pose -> {
                         },
                         vision);
-                intake = Intake.getInstance();
+                roller = Roller.getInstance();
+                intakeWrist = IntakeWrist.getInstance();
                 break;
         }
 
