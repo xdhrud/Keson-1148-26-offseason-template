@@ -67,7 +67,7 @@ public class RollerIOTalonFX implements RollerIO {
     }
 
     @Override
-    public void updateInputs(IntakeIOInputs inputs) {
+    public void updateInputs(RollerIOInputs inputs) {
         inputs.intakeMotorMasterConnected = motorMasterConnectedDebouncer.calculate(intakeMotorMaster.isConnected());
         inputs.intakeMotorFollowerConnected = motorFollowerConnectedDebouncer
                 .calculate(intakeMotorFollower.isConnected());

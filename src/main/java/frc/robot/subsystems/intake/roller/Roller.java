@@ -1,10 +1,7 @@
 package frc.robot.subsystems.intake.roller;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Roller extends SubsystemBase {
@@ -15,7 +12,7 @@ public class Roller extends SubsystemBase {
 
     public static Roller getInstance() {
         if (instance == null) {
-            return new Roller();
+            instance = new Roller();
         }
         return instance;
     }
