@@ -171,7 +171,7 @@ public class Robot extends LoggedRobot {
     public void teleopInit() {
         Elastic.selectTab("Teleop");
         Drive.getInstance().setVisionActive(true);
-        Vision.getInstance().setIMUMode(4);
+        // Vision.getInstance().setIMUMode(4);
         NetworkCommunicator.getInstance().setIsAuto(false);
 
         // This makes sure that the autonomous stops running when
